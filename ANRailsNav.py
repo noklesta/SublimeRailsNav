@@ -58,3 +58,8 @@ class ListRailsViewsCommand(sublime_plugin.WindowCommand, RailsMixin):
 class ListRailsJavascriptsCommand(sublime_plugin.WindowCommand, RailsMixin):
     def run(self):
         self.show_files(['app', 'assets', 'javascripts'], '\.(?:js|coffee|erb)$')
+
+
+class ListRailsStylesheetsCommand(sublime_plugin.WindowCommand, RailsMixin):
+    def run(self):
+        self.show_files(['app', 'assets', 'stylesheets'], '\.(?:s?css)$')

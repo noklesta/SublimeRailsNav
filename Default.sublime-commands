@@ -14,5 +14,9 @@
     {
         "caption": "ANRailsNav: List javascript files",
         "command": "list_rails_javascripts"
+    },
+    {
+        "caption": "ANRailsNav: List stylesheets",
+        "command": "list_rails_stylesheets"
     }
 ]

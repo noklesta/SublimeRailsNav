@@ -10,5 +10,9 @@
     {
         "caption": "ANRailsNav: List views",
         "command": "list_rails_views"
+    },
+    {
+        "caption": "ANRailsNav: List javascript files",
+        "command": "list_rails_javascripts"
     }
 ]

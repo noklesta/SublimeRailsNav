@@ -6,7 +6,7 @@ from recursive_glob import rglob
 
 
 class RailsMixin:
-    def show_files(self, segment):
+    def show_files(self, segment, file_pattern='\.rb$'):
         self.root = self.rails_root()
         if not self.root:
             sublime.error_message('No Gemfile found. Not a Rails 3 application?')
@@ -15,7 +15,7 @@ class RailsMixin:
         path = self.construct_glob_path(segment)
         start_index = len(self.root) + 1
 
-        self.files = rglob(path, '*.rb')
+        self.files = rglob(path, file_pattern)
         relative_paths = map(lambda x: x[start_index:], self.files)
         self.window.show_quick_panel(relative_paths, self.file_selected)
 
@@ -47,3 +47,8 @@ class ListRailsModelsCommand(sublime_plugin.WindowCommand, RailsMixin):
 class ListRailsControllersCommand(sublime_plugin.WindowCommand, RailsMixin):
     def run(self):
         self.show_files('controllers')
+
+
+class ListRailsViewsCommand(sublime_plugin.WindowCommand, RailsMixin):
+    def run(self):
+        self.show_files('views', '\.erb$')

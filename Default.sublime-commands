@@ -6,5 +6,9 @@
     {
         "caption": "ANRailsNav: List controllers",
         "command": "list_rails_controllers"
+    },
+    {
+        "caption": "ANRailsNav: List views",
+        "command": "list_rails_views"
     }
 ]

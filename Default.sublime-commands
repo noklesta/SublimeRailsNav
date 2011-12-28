@@ -1,0 +1,10 @@
+[
+    {
+        "caption": "ANRailsNav: List models",
+        "command": "list_rails_models"
+    },
+    {
+        "caption": "ANRailsNav: List controllers",
+        "command": "list_rails_controllers"
+    }
+]

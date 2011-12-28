@@ -7,15 +7,19 @@ import sublime_plugin
 class RailsMixin:
     def show_files(self, segment):
         self.root = self.rails_root()
+        if not self.root:
+            sublime.error_message('No Gemfile found. Not a Rails 3 application?')
+            return False
+
         path = self.construct_glob_path(segment)
         start_index = len(self.root) + 1
 
         self.files = glob.glob(path)
         relative_paths = map(lambda x: x[start_index:], self.files)
-        self.view.window().show_quick_panel(relative_paths, self.file_selected)
+        self.window.show_quick_panel(relative_paths, self.file_selected)
 
     def rails_root(self):
-        directory = self.view.window().folders()[0]
+        directory = self.window.folders()[0]
         while directory:
             if os.path.exists(os.path.join(directory, 'Gemfile')):
                 return directory
@@ -30,14 +34,14 @@ class RailsMixin:
         return os.path.join(self.root, 'app', segment, '*.rb')
 
     def file_selected(self, selected_index):
-        self.view.window().open_file(self.files[selected_index])
+        self.window.open_file(self.files[selected_index])
 
 
-class ListRailsModelsCommand(sublime_plugin.TextCommand, RailsMixin):
-    def run(self, edit):
+class ListRailsModelsCommand(sublime_plugin.WindowCommand, RailsMixin):
+    def run(self):
         self.show_files('models')
 
 
-class ListRailsControllersCommand(sublime_plugin.TextCommand, RailsMixin):
-    def run(self, edit):
+class ListRailsControllersCommand(sublime_plugin.WindowCommand, RailsMixin):
+    def run(self):
         self.show_files('controllers')

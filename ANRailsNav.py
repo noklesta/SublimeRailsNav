@@ -34,7 +34,8 @@ class RailsMixin:
         return os.path.join(self.root, 'app', segment, '*.rb')
 
     def file_selected(self, selected_index):
-        self.window.open_file(self.files[selected_index])
+        if selected_index != -1:
+            self.window.open_file(self.files[selected_index])
 
 
 class ListRailsModelsCommand(sublime_plugin.WindowCommand, RailsMixin):

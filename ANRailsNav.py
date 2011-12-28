@@ -2,6 +2,7 @@ import os
 import glob
 import sublime
 import sublime_plugin
+from recursive_glob import rglob
 
 
 class RailsMixin:
@@ -14,7 +15,7 @@ class RailsMixin:
         path = self.construct_glob_path(segment)
         start_index = len(self.root) + 1
 
-        self.files = glob.glob(path)
+        self.files = rglob(path, '*.rb')
         relative_paths = map(lambda x: x[start_index:], self.files)
         self.window.show_quick_panel(relative_paths, self.file_selected)
 
@@ -31,7 +32,7 @@ class RailsMixin:
         return False
 
     def construct_glob_path(self, segment):
-        return os.path.join(self.root, 'app', segment, '*.rb')
+        return os.path.join(self.root, 'app', segment)
 
     def file_selected(self, selected_index):
         if selected_index != -1:

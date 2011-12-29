@@ -78,5 +78,5 @@ class ListRailsStylesheetsCommand(sublime_plugin.WindowCommand, RailsMixin):
                 ['app', 'assets', 'stylesheets'],
                 ['lib', 'assets', 'stylesheets'],
                 ['vendor', 'assets', 'stylesheets']
-            ],  '\.(?:s?css)$'
+            ], '\.(?:s?css)$'
         )

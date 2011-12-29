@@ -6,6 +6,22 @@ from recursive_glob import rglob
 
 
 class RailsMixin:
+    def get_setting(self, key):
+        settings = None
+        view = self.window.active_view()
+
+        if view:
+            settings = self.window.active_view().settings()
+
+        if settings and settings.has('ANRailsNav') and settings.get('ANRailsNav').has_key(key):
+            # Get project-specific setting
+            dirs = settings.get('ANRailsNav')[key]
+        else:
+            # Get user-specific or default setting
+            settings = sublime.load_settings('ANRailsNav.sublime-settings')
+            dirs = settings.get(key)
+        return dirs
+
     def show_files(self, segment_groups, file_pattern='\.rb$'):
         self.root = self.rails_root()
         if not self.root:
@@ -64,19 +80,11 @@ class ListRailsViewsCommand(sublime_plugin.WindowCommand, RailsMixin):
 
 class ListRailsJavascriptsCommand(sublime_plugin.WindowCommand, RailsMixin):
     def run(self):
-        self.show_files([
-                ['app', 'assets', 'javascripts'],
-                ['lib', 'assets', 'javascripts'],
-                ['vendor', 'assets', 'javascripts']
-            ], '\.(?:js|coffee|erb)$'
-        )
+        dirs = self.get_setting('javascript_locations')
+        self.show_files(dirs, '\.(?:js|coffee|erb)$')
 
 
 class ListRailsStylesheetsCommand(sublime_plugin.WindowCommand, RailsMixin):
     def run(self):
-        self.show_files([
-                ['app', 'assets', 'stylesheets'],
-                ['lib', 'assets', 'stylesheets'],
-                ['vendor', 'assets', 'stylesheets']
-            ], '\.(?:s?css)$'
-        )
+        dirs = self.get_setting('stylesheet_locations')
+        self.show_files(dirs, '\.(?:s?css)$')

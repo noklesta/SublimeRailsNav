@@ -6,18 +6,22 @@ from recursive_glob import rglob
 
 
 class RailsMixin:
-    def show_files(self, segments, file_pattern='\.rb$'):
+    def show_files(self, segment_groups, file_pattern='\.rb$'):
         self.root = self.rails_root()
         if not self.root:
             sublime.error_message('No Gemfile found. Not a Rails 3 application?')
             return False
 
-        path = self.construct_glob_path(segments)
         start_index = len(self.root) + 1
+        paths = self.construct_glob_paths(segment_groups)
 
-        self.files = rglob(path, file_pattern)
+        self.files = []
+        for path in paths:
+            self.files.extend(rglob(path, file_pattern))
+
         # Need to add a couple of spaces to avoid getting the file names cut off
         relative_paths = map(lambda x: x[start_index:] + '  ', self.files)
+
         self.window.show_quick_panel(relative_paths, self.file_selected)
 
     def rails_root(self):
@@ -32,8 +36,11 @@ class RailsMixin:
             directory = parent
         return False
 
-    def construct_glob_path(self, segments):
-        return os.path.join(self.root, *segments)
+    def construct_glob_paths(self, segment_groups):
+        paths = []
+        for segment_group in segment_groups:
+            paths.append(os.path.join(self.root, *segment_group))
+        return paths
 
     def file_selected(self, selected_index):
         if selected_index != -1:
@@ -42,24 +49,34 @@ class RailsMixin:
 
 class ListRailsModelsCommand(sublime_plugin.WindowCommand, RailsMixin):
     def run(self):
-        self.show_files(['app', 'models'])
+        self.show_files([['app', 'models']])
 
 
 class ListRailsControllersCommand(sublime_plugin.WindowCommand, RailsMixin):
     def run(self):
-        self.show_files(['app', 'controllers'])
+        self.show_files([['app', 'controllers']])
 
 
 class ListRailsViewsCommand(sublime_plugin.WindowCommand, RailsMixin):
     def run(self):
-        self.show_files(['app', 'views'], '\.(?:erb|haml)$')
+        self.show_files([['app', 'views']], '\.(?:erb|haml)$')
 
 
 class ListRailsJavascriptsCommand(sublime_plugin.WindowCommand, RailsMixin):
     def run(self):
-        self.show_files(['app', 'assets', 'javascripts'], '\.(?:js|coffee|erb)$')
+        self.show_files([
+                ['app', 'assets', 'javascripts'],
+                ['lib', 'assets', 'javascripts'],
+                ['vendor', 'assets', 'javascripts']
+            ], '\.(?:js|coffee|erb)$'
+        )
 
 
 class ListRailsStylesheetsCommand(sublime_plugin.WindowCommand, RailsMixin):
     def run(self):
-        self.show_files(['app', 'assets', 'stylesheets'], '\.(?:s?css)$')
+        self.show_files([
+                ['app', 'assets', 'stylesheets'],
+                ['lib', 'assets', 'stylesheets'],
+                ['vendor', 'assets', 'stylesheets']
+            ],  '\.(?:s?css)$'
+        )

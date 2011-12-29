@@ -1,5 +1,4 @@
 import os
-import glob
 import sublime
 import sublime_plugin
 from recursive_glob import rglob
@@ -13,12 +12,12 @@ class RailsMixin:
         if view:
             settings = self.window.active_view().settings()
 
-        if settings and settings.has('ANRailsNav') and settings.get('ANRailsNav').has_key(key):
+        if settings and settings.has('SublimeRailsNav') and key in settings.get('SublimeRailsNav'):
             # Get project-specific setting
-            dirs = settings.get('ANRailsNav')[key]
+            dirs = settings.get('SublimeRailsNav')[key]
         else:
             # Get user-specific or default setting
-            settings = sublime.load_settings('ANRailsNav.sublime-settings')
+            settings = sublime.load_settings('SublimeRailsNav.sublime-settings')
             dirs = settings.get(key)
         return dirs
 

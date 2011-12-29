@@ -12,23 +12,23 @@
                 "children":
                 [
                     {
-                        "caption": "ANRailsNav",
+                        "caption": "SublimeRailsNav",
                         "children":
                         [
                             {
                                 "command": "open_file",
-                                "args": {"file": "${packages}/ANRailsNav/ANRailsNav.sublime-settings"},
+                                "args": {"file": "${packages}/SublimeRailsNav/SublimeRailsNav.sublime-settings"},
                                 "caption": "Settings – Default"
                             },
                             {
                                 "command": "open_file",
-                                "args": {"file": "${packages}/User/ANRailsNav.sublime-settings"},
+                                "args": {"file": "${packages}/User/SublimeRailsNav.sublime-settings"},
                                 "caption": "Settings – User"
                             },
                             {
                                 "command": "open_file",
                                 "args": {
-                                    "file": "${packages}/ANRailsNav/Default (Windows).sublime-keymap",
+                                    "file": "${packages}/SublimeRailsNav/Default (Windows).sublime-keymap",
                                     "platform": "Windows"
                                 },
                                 "caption": "Key Bindings – Default"
@@ -36,7 +36,7 @@
                             {
                                 "command": "open_file",
                                 "args": {
-                                    "file": "${packages}/ANRailsNav/Default (OSX).sublime-keymap",
+                                    "file": "${packages}/SublimeRailsNav/Default (OSX).sublime-keymap",
                                     "platform": "OSX"
                                 },
                                 "caption": "Key Bindings – Default"
@@ -44,7 +44,7 @@
                             {
                                 "command": "open_file",
                                 "args": {
-                                    "file": "${packages}/ANRailsNav/Default (Linux).sublime-keymap",
+                                    "file": "${packages}/SublimeRailsNav/Default (Linux).sublime-keymap",
                                     "platform": "Linux"
                                 },
                                 "caption": "Key Bindings – Default"

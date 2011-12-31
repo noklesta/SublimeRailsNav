@@ -1,8 +1,16 @@
 # Sublime Text 2 plugin: SublimeRailsNav
 
-Plugin for navigating Ruby on Rails 3 applications. It provides commands for
-listing models, controllers, views, javascript files, or stylesheets in a
-quick panel for easy selection.
+Plugin for navigating Ruby on Rails 3 applications.
+
+The plugin provides commands for listing models, controllers, views,
+javascript files, or stylesheets in a quick panel for easy selection.
+
+Related files are located at the top of the list so that they can be selected
+simply by pressing Enter. For instance, if the active view is a Rails model
+and you request a list of controllers, the controller corresponding to the
+model will be listed at the top, provided that you follow normal Rails
+resource conventions with the controller name containing the pluralized
+version of the model name (e.g. post.rb and posts_controller.rb).
 
 ## Install
 
@@ -57,3 +65,9 @@ project file under a top-level "settings" key. An example of the latter:
         ]
       }
     }
+
+## Credits
+
+- Inspiration from Luqman Amjad's Rails Related Files package for Sublime Text 2.
+- Python version of the Rails inflector: <https://bitbucket.org/ixmatus/inflector>
+- Tiny copy/paste from the Git package for Sublime Text 2.

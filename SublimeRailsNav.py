@@ -1,4 +1,5 @@
 import os
+import re
 import sublime
 import sublime_plugin
 from recursive_glob import rglob
@@ -27,13 +28,12 @@ class RailsMixin:
             sublime.error_message('No Gemfile found. Not a Rails 3 application?')
             return False
 
-        start_index = len(self.root) + 1
         paths = self.construct_glob_paths(segment_groups)
+        self.find_files(paths, file_pattern)
 
-        self.files = []
-        for path in paths:
-            self.files.extend(rglob(path, file_pattern))
+        self.move_related_file_to_top()
 
+        start_index = len(self.root) + 1
         # Need to add a couple of spaces to avoid getting the file names cut off
         relative_paths = map(lambda x: x[start_index:] + '  ', self.files)
 
@@ -61,29 +61,67 @@ class RailsMixin:
         if selected_index != -1:
             self.window.open_file(self.files[selected_index])
 
+    def find_files(self, paths, file_pattern):
+        self.files = []
+        for path in paths:
+            self.files.extend(rglob(path, file_pattern))
 
-class ListRailsModelsCommand(sublime_plugin.WindowCommand, RailsMixin):
+    def move_related_file_to_top(self):
+        view = self.window.active_view()
+        if view:
+            current_file = view.file_name()
+            related_file = self.construct_related_file_name(current_file)
+
+            if related_file:
+                for file in self.files:
+                    if file == related_file:
+                        i = self.files.index(file)
+                        self.files.insert(0, self.files.pop(i))
+
+
+class RailsCommandBase(sublime_plugin.WindowCommand, RailsMixin):
+    def construct_related_file_name(self, current_file):
+        pass
+
+
+class ListRailsModelsCommand(RailsCommandBase):
     def run(self):
         self.show_files([['app', 'models']])
 
+    def construct_related_file_name(self, current_file):
+        if 'app/controllers' in current_file:
+            related_file = re.sub(r'app/controllers', 'app/models', current_file)
+            related_file = re.sub(r's_controller(\.[^.]+$)', '\g<1>', related_file)
+            return related_file
+        else:
+            return None
 
-class ListRailsControllersCommand(sublime_plugin.WindowCommand, RailsMixin):
+
+class ListRailsControllersCommand(RailsCommandBase):
     def run(self):
         self.show_files([['app', 'controllers']])
 
+    def construct_related_file_name(self, current_file):
+        if 'app/models' in current_file:
+            related_file = re.sub(r'app/models', 'app/controllers', current_file)
+            related_file = re.sub(r'\.[^.]+$', r's_controller\g<0>', related_file)
+            return related_file
+        else:
+            return None
 
-class ListRailsViewsCommand(sublime_plugin.WindowCommand, RailsMixin):
+
+class ListRailsViewsCommand(RailsCommandBase):
     def run(self):
         self.show_files([['app', 'views']], '\.(?:erb|haml)$')
 
 
-class ListRailsJavascriptsCommand(sublime_plugin.WindowCommand, RailsMixin):
+class ListRailsJavascriptsCommand(RailsCommandBase):
     def run(self):
         dirs = self.get_setting('javascript_locations')
         self.show_files(dirs, '\.(?:js|coffee|erb)$')
 
 
-class ListRailsStylesheetsCommand(sublime_plugin.WindowCommand, RailsMixin):
+class ListRailsStylesheetsCommand(RailsCommandBase):
     def run(self):
         dirs = self.get_setting('stylesheet_locations')
         self.show_files(dirs, '\.(?:s?css)$')

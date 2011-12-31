@@ -3,6 +3,7 @@ import re
 import sublime
 import sublime_plugin
 from recursive_glob import rglob
+from lib.inflector import *
 
 
 class RailsMixin:
@@ -80,6 +81,10 @@ class RailsMixin:
 
 
 class RailsCommandBase(sublime_plugin.WindowCommand, RailsMixin):
+    MODEL_SEGMENT = os.path.join('app', 'models')
+    CONTROLLER_SEGMENT = os.path.join('app', 'controllers')
+    VIEW_SEGMENT = os.path.join('app', 'views')
+
     def construct_related_file_name(self, current_file):
         pass
 
@@ -89,9 +94,12 @@ class ListRailsModelsCommand(RailsCommandBase):
         self.show_files([['app', 'models']])
 
     def construct_related_file_name(self, current_file):
-        if 'app/controllers' in current_file:
-            related_file = re.sub(r'app/controllers', 'app/models', current_file)
-            related_file = re.sub(r's_controller(\.[^.]+$)', '\g<1>', related_file)
+        if self.CONTROLLER_SEGMENT in current_file:
+            m = re.search(r'(\w+)_controller\.\w+$', current_file)
+            singular = Inflector().singularize(m.group(1))
+
+            related_file = re.sub(self.CONTROLLER_SEGMENT, self.MODEL_SEGMENT, current_file)
+            related_file = re.sub(r'\w+_controller(\.\w+$)', '%s\g<1>' % singular, related_file)
             return related_file
         else:
             return None
@@ -102,9 +110,12 @@ class ListRailsControllersCommand(RailsCommandBase):
         self.show_files([['app', 'controllers']])
 
     def construct_related_file_name(self, current_file):
-        if 'app/models' in current_file:
-            related_file = re.sub(r'app/models', 'app/controllers', current_file)
-            related_file = re.sub(r'\.[^.]+$', r's_controller\g<0>', related_file)
+        if self.MODEL_SEGMENT in current_file:
+            m = re.search(r'(\w+)\.\w+$', current_file)
+            plural = Inflector().pluralize(m.group(1))
+
+            related_file = re.sub(self.MODEL_SEGMENT, self.CONTROLLER_SEGMENT, current_file)
+            related_file = re.sub(r'\w+(\.\w+)$', '%s_controller\g<1>' % plural, related_file)
             return related_file
         else:
             return None

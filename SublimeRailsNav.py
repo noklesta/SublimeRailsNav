@@ -26,7 +26,7 @@ class RailsMixin:
     def show_files(self, segment_groups, file_pattern='\.rb$'):
         self.root = self.rails_root()
         if not self.root:
-            sublime.error_message('No Gemfile found. Not a Rails 3 application?')
+            sublime.error_message('No Rails root directory found. Not a Rails application?')
             return False
 
         paths = self.construct_glob_paths(segment_groups)
@@ -41,15 +41,32 @@ class RailsMixin:
         self.window.show_quick_panel(relative_paths, self.file_selected)
 
     def rails_root(self):
-        directory = self.window.folders()[0]
-        while directory:
-            if os.path.exists(os.path.join(directory, 'Gemfile')):
-                return directory
-            parent = os.path.realpath(os.path.join(directory, os.path.pardir))
-            if parent == directory:
-                # /.. == /
-                return False
-            directory = parent
+        # Look for a Gemfile first, since that should always be found in the
+        # root directory of a Rails 3 project. If no Gemfile is found, we
+        # might have a Rails 2 (or earlier) project, so look for a Rakefile
+        # instead. However, since Rakefiles may be found in subdirectories as
+        # well, in that case we also check for a number for additional
+        # standard Rails directories.
+        for root_indicator in ['Gemfile', 'Rakefile']:
+            directory = self.window.folders()[0]
+            while directory:
+                if os.path.exists(os.path.join(directory, root_indicator)):
+                    if root_indicator == 'Gemfile':
+                        return directory
+                    else:
+                        looks_like_root = True
+                        for additional_dir in ['app', 'config', 'lib', 'vendor']:
+                            if not (os.path.exists(os.path.join(directory, additional_dir))):
+                                looks_like_root = False
+                                break
+                        if looks_like_root:
+                            return directory
+
+                parent = os.path.realpath(os.path.join(directory, os.path.pardir))
+                if parent == directory:
+                    # /.. == /
+                    break
+                directory = parent
         return False
 
     def construct_glob_paths(self, segment_groups):

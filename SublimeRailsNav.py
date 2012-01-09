@@ -32,7 +32,13 @@ class RailsMixin:
         paths = self.construct_glob_paths(segment_groups)
         self.find_files(paths, file_pattern)
 
-        self.move_related_file_to_top()
+        view = self.window.active_view()
+        if view:
+            current_file = view.file_name()
+            if self.is_listing_current_file_group(current_file):
+                self.remove_from_list(current_file)
+            else:
+                self.move_related_file_to_top(current_file)
 
         start_index = len(self.root) + 1
         # Need to add a couple of spaces to avoid getting the file names cut off
@@ -84,17 +90,17 @@ class RailsMixin:
         for path in paths:
             self.files.extend(rglob(path, file_pattern))
 
-    def move_related_file_to_top(self):
-        view = self.window.active_view()
-        if view:
-            current_file = view.file_name()
-            related_file = self.construct_related_file_name(current_file)
+    def remove_from_list(self, current_file):
+        self.files.remove(current_file)
 
-            if related_file:
-                for file in self.files:
-                    if file == related_file:
-                        i = self.files.index(file)
-                        self.files.insert(0, self.files.pop(i))
+    def move_related_file_to_top(self, current_file):
+        related_file = self.construct_related_file_name(current_file)
+
+        if related_file:
+            for file in self.files:
+                if file == related_file:
+                    i = self.files.index(file)
+                    self.files.insert(0, self.files.pop(i))
 
 
 class RailsCommandBase(sublime_plugin.WindowCommand, RailsMixin):
@@ -121,6 +127,9 @@ class ListRailsModelsCommand(RailsCommandBase):
         else:
             return None
 
+    def is_listing_current_file_group(self, current_file):
+        return 'app/models' in current_file
+
 
 class ListRailsControllersCommand(RailsCommandBase):
     def run(self):
@@ -137,10 +146,16 @@ class ListRailsControllersCommand(RailsCommandBase):
         else:
             return None
 
+    def is_listing_current_file_group(self, current_file):
+        return 'app/controllers' in current_file
+
 
 class ListRailsViewsCommand(RailsCommandBase):
     def run(self):
         self.show_files([['app', 'views']], '\.(?:erb|haml)$')
+
+    def is_listing_current_file_group(self, current_file):
+        return 'app/views' in current_file
 
 
 class ListRailsJavascriptsCommand(RailsCommandBase):
@@ -148,8 +163,14 @@ class ListRailsJavascriptsCommand(RailsCommandBase):
         dirs = self.get_setting('javascript_locations')
         self.show_files(dirs, '\.(?:js|coffee|erb)$')
 
+    def is_listing_current_file_group(self, current_file):
+        return 'javascripts' in current_file
+
 
 class ListRailsStylesheetsCommand(RailsCommandBase):
     def run(self):
         dirs = self.get_setting('stylesheet_locations')
         self.show_files(dirs, '\.(?:s?css)$')
+
+    def is_listing_current_file_group(self, current_file):
+        return 'stylesheets' in current_file

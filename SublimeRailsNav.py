@@ -54,7 +54,11 @@ class RailsMixin:
         # well, in that case we also check for a number for additional
         # standard Rails directories.
         for root_indicator in ['Gemfile', 'Rakefile']:
-            directory = self.window.folders()[0]
+            folders = self.window.folders()
+            if len(folders) == 0:
+                return False
+
+            directory = folders[0]
             while directory:
                 if os.path.exists(os.path.join(directory, root_indicator)):
                     if root_indicator == 'Gemfile':

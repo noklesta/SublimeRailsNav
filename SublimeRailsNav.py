@@ -95,7 +95,13 @@ class RailsMixin:
             self.files.extend(rglob(path, file_pattern))
 
     def remove_from_list(self, current_file):
-        self.files.remove(current_file)
+        # First check to see if the current file is in the list. For instance,
+        # if the current file is under vendor/assets/javascripts and we did
+        # not include that among the javascript locations that we list,
+        # the current file will not in fact be there.
+        if current_file in self.files:
+            self.files.remove(current_file)
+            pass
 
     def move_related_file_to_top(self, current_file):
         related_file = self.construct_related_file_name(current_file)

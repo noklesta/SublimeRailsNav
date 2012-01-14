@@ -1,8 +1,8 @@
 # Sublime Text 2 plugin: SublimeRailsNav
 
-Plugin for navigating Ruby on Rails 3 applications.
+Simple plugin for navigating Ruby on Rails applications.
 
-The plugin provides commands for listing models, controllers, views,
+This plugin provides commands for listing models, controllers, views,
 javascript files, or stylesheets in a quick panel for easy selection.
 
 Related files are located at the top of the list so that they can be selected
@@ -11,6 +11,9 @@ and you request a list of controllers, the controller corresponding to the
 model will be listed at the top, provided that you follow normal Rails
 resource conventions with the controller name containing the pluralized
 version of the model name (e.g. post.rb and posts_controller.rb).
+
+The plugin was inspired by Luqman Amjad's Rails Related Files plugin. These
+plugins have complementary functionality and can be used together.
 
 ## Install
 
@@ -29,7 +32,8 @@ version.
 
 ## Key bindings
 
-You can setup key bindings like this:
+The plugin does not install any key bindings automatically. You can set up
+your own key bindings like this:
 
     { "keys": ["super+ctrl+m"], "command": "list_rails_models" },
     { "keys": ["super+ctrl+c"], "command": "list_rails_controllers" },
@@ -68,6 +72,30 @@ project file under a top-level "settings" key. An example of the latter:
 
 ## Credits
 
-- Inspiration from Luqman Amjad's Rails Related Files package for Sublime Text 2.
+- Inspiration from Luqman Amjad's Rails Related Files plugin for ST2.
 - Python version of the Rails inflector: <https://bitbucket.org/ixmatus/inflector>
-- Tiny copy/paste from the Git package for Sublime Text 2.
+- Contains a modified version of a small code snippet from the Git package for ST2.
+
+## Licence
+
+All of SublimeRailsNav is licensed under the MIT licence.
+
+  Copyright (c) 2012 Anders Nøklestad
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  THE SOFTWARE.

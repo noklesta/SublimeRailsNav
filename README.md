@@ -1,4 +1,4 @@
-# Sublime Text 2 plugin: SublimeRailsNav
+# Sublime Text 2 plugin: Simple Rails Navigator
 
 Simple plugin for navigating Ruby on Rails applications.
 
@@ -32,9 +32,8 @@ version.
 
 ### Clone from GitHub
 
-Alternatively, you can clone the repository directly from GitHub:
+Alternatively, you can clone the repository directly from GitHub into your Packages directory:
 
-    cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/
     git clone http://github.com/noklesta/SublimeRailsNav
 
 ## Key bindings

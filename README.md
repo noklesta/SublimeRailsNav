@@ -15,7 +15,7 @@ version of the model name (e.g. post.rb and posts_controller.rb).
 The plugin was inspired by Luqman Amjad's Rails Related Files plugin. These
 plugins have complementary functionality and can be used together.
 
-## Install
+## Installation
 
 ### Package Control
 
@@ -29,6 +29,13 @@ Control](http://wbond.net/sublime\_packages/package\_control).
 
 Package Control will automatically keep SublimeRailsNav up to date with the latest
 version.
+
+### Clone from GitHub
+
+Alternatively, you can clone the repository directly from GitHub:
+
+    cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/
+    git clone http://github.com/noklesta/SublimeRailsNav
 
 ## Key bindings
 

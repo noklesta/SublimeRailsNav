@@ -27,8 +27,8 @@ Control](http://wbond.net/sublime\_packages/package\_control).
  * Select "Package Control: Install Package" (it'll take a few seconds)
  * Select Simple Rails Navigator when the list appears.
 
-Package Control will automatically keep SublimeRailsNav up to date with the latest
-version.
+Package Control will automatically keep the Simple Rails Navigator up to date
+with the latest version.
 
 ### Clone from GitHub
 

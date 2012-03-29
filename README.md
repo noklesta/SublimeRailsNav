@@ -56,6 +56,8 @@ you can restrict the key bindings to command mode like this:
     { "keys": [" ", "i"], "command": "list_rails_javascripts", "context": [{"key": "setting.command_mode"}] },
     { "keys": [" ", "y"], "command": "list_rails_stylesheets", "context": [{"key": "setting.command_mode"}] }
 
+All commands are also available from the Command Palette (search for commands beginning with "Simple Rails Navigator").
+
 ## Settings
 
 The settings in SublimeRailsNav.sublime-settings may be overridden either in

@@ -1,22 +1,22 @@
 [
     {
-        "caption": "SublimeRailsNav: List models",
+        "caption": "Simple Rails Navigator: List models",
         "command": "list_rails_models"
     },
     {
-        "caption": "SublimeRailsNav: List controllers",
+        "caption": "Simple Rails Navigator: List controllers",
         "command": "list_rails_controllers"
     },
     {
-        "caption": "SublimeRailsNav: List views",
+        "caption": "Simple Rails Navigator: List views",
         "command": "list_rails_views"
     },
     {
-        "caption": "SublimeRailsNav: List javascript files",
+        "caption": "Simple Rails Navigator: List javascript files",
         "command": "list_rails_javascripts"
     },
     {
-        "caption": "SublimeRailsNav: List stylesheets",
+        "caption": "Simple Rails Navigator: List stylesheets",
         "command": "list_rails_stylesheets"
     }
 ]

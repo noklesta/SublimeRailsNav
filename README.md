@@ -38,8 +38,10 @@ Alternatively, you can clone the repository directly from GitHub into your Packa
 
 ## Key bindings
 
-The plugin does not install any key bindings automatically. You can set up
-your own key bindings like this:
+The plugin does not install any key bindings automatically. The following is
+an example of how you can set up your own key bindings. To make sure they
+don't conflict with existing commands, first run `sublime.log_commands(True)`
+in the console, try out the key combinations and see if anything is logged.
 
     { "keys": ["super+ctrl+m"], "command": "list_rails_models" },
     { "keys": ["super+ctrl+c"], "command": "list_rails_controllers" },

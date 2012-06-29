@@ -24,7 +24,8 @@ class RailsMixin:
         return dirs
 
     def show_files(self, segment_groups, file_pattern='\.rb$'):
-        self.root = self.rails_root()
+        if not hasattr(self, 'root'):
+            self.root = self.rails_root()
         if not self.root:
             sublime.error_message('No Rails root directory found. Not a Rails application?')
             return False

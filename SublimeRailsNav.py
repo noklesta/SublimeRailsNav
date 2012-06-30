@@ -169,6 +169,38 @@ class ListRailsViewsCommand(RailsCommandBase):
         return 'app/views' in current_file
 
 
+class ListRailsTestsCommand(RailsCommandBase):
+    def run(self):
+        self.root = self.rails_root()
+        if os.path.isdir(os.path.join(self.root, 'spec')):
+            # RSpec seems to be installed, so ignore the 'test' dir and search for specs
+            self.test_type = 'spec'
+            self.model_test_dir = os.path.join('spec', 'models')
+            self.controller_test_dir = os.path.join('spec', 'controllers')
+        else:
+            # No RSpec, so use the standard 'test' dir
+            self.test_type = 'test'
+            self.model_test_dir = os.path.join('test', 'unit')
+            self.controller_test_dir = os.path.join('test', 'functional')
+
+        self.show_files([[self.test_type]])
+
+    def construct_related_file_name(self, current_file):
+        if self.MODEL_SEGMENT in current_file:
+            related_file = re.sub(self.MODEL_SEGMENT, self.model_test_dir, current_file)
+            related_file = re.sub(r'(\.\w+)$', '_%s\g<1>' % self.test_type, related_file)
+            return related_file
+        elif self.CONTROLLER_SEGMENT in current_file:
+            related_file = re.sub(self.CONTROLLER_SEGMENT, self.controller_test_dir, current_file)
+            related_file = re.sub(r'(\.\w+)$', '_%s\g<1>' % self.test_type, related_file)
+            return related_file
+        else:
+            return None
+
+    def is_listing_current_file_group(self, current_file):
+        return os.path.join(self.root, self.test_type) in current_file
+
+
 class ListRailsJavascriptsCommand(RailsCommandBase):
     def run(self):
         dirs = self.get_setting('javascript_locations')

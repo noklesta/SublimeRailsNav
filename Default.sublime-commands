@@ -12,6 +12,10 @@
         "command": "list_rails_views"
     },
     {
+        "caption": "Simple Rails Navigator: List tests/specs",
+        "command": "list_rails_tests"
+    },
+    {
         "caption": "Simple Rails Navigator: List javascript files",
         "command": "list_rails_javascripts"
     },

@@ -82,7 +82,8 @@ project file under a top-level "settings" key. An example of the latter:
 
 ## Credits
 
-- Inspiration from Luqman Amjad's Rails Related Files plugin for ST2.
+- Inspiration from Luqman Amjad's Rails Related Files plugin for ST2 and from Tim Pope's rails.vim plugin for Vim
+(which contains sooo much more functionality than this one, of course :-)
 - Python version of the Rails inflector: <https://bitbucket.org/ixmatus/inflector>
 - Contains a modified version of a small code snippet from the Git package for ST2.
 

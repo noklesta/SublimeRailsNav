@@ -23,8 +23,8 @@ class RailsMixin:
             dirs = settings.get(key)
         return dirs
 
-    def show_files(self, segment_groups, file_pattern='\.rb$'):
-        paths = self.construct_glob_paths(segment_groups)
+    def show_files(self, dirs, file_pattern='\.rb$'):
+        paths = self.construct_glob_paths(dirs)
         self.find_files(paths, file_pattern)
 
         view = self.window.active_view()
@@ -74,10 +74,10 @@ class RailsMixin:
                 directory = parent
         return False
 
-    def construct_glob_paths(self, segment_groups):
+    def construct_glob_paths(self, dirs):
         paths = []
-        for segment_group in segment_groups:
-            paths.append(os.path.join(self.root, *segment_group))
+        for dir in dirs:
+            paths.append(os.path.join(self.root, *dir))
         return paths
 
     def file_selected(self, selected_index):
@@ -109,9 +109,9 @@ class RailsMixin:
 
 
 class RailsCommandBase(sublime_plugin.WindowCommand, RailsMixin):
-    MODEL_SEGMENT = os.path.join('app', 'models')
-    CONTROLLER_SEGMENT = os.path.join('app', 'controllers')
-    VIEW_SEGMENT = os.path.join('app', 'views')
+    MODEL_DIR = os.path.join('app', 'models')
+    CONTROLLER_DIR = os.path.join('app', 'controllers')
+    VIEW_DIR = os.path.join('app', 'views')
 
     def find_root(self):
         self.root = self.rails_root()
@@ -131,11 +131,11 @@ class ListRailsModelsCommand(RailsCommandBase):
         self.show_files([['app', 'models']])
 
     def construct_related_file_name(self, current_file):
-        if self.CONTROLLER_SEGMENT in current_file:
+        if self.CONTROLLER_DIR in current_file:
             m = re.search(r'(\w+)_controller\.\w+$', current_file)
             singular = Inflector().singularize(m.group(1))
 
-            related_file = re.sub(self.CONTROLLER_SEGMENT, self.MODEL_SEGMENT, current_file)
+            related_file = re.sub(self.CONTROLLER_DIR, self.MODEL_DIR, current_file)
             related_file = re.sub(r'\w+_controller(\.\w+$)', '%s\g<1>' % singular, related_file)
             return related_file
         else:
@@ -152,11 +152,11 @@ class ListRailsControllersCommand(RailsCommandBase):
         self.show_files([['app', 'controllers']])
 
     def construct_related_file_name(self, current_file):
-        if self.MODEL_SEGMENT in current_file:
+        if self.MODEL_DIR in current_file:
             m = re.search(r'(\w+)\.\w+$', current_file)
             plural = Inflector().pluralize(m.group(1))
 
-            related_file = re.sub(self.MODEL_SEGMENT, self.CONTROLLER_SEGMENT, current_file)
+            related_file = re.sub(self.MODEL_DIR, self.CONTROLLER_DIR, current_file)
             related_file = re.sub(r'\w+(\.\w+)$', '%s_controller\g<1>' % plural, related_file)
             return related_file
         else:
@@ -194,12 +194,12 @@ class ListRailsTestsCommand(RailsCommandBase):
         self.show_files([[self.test_type]])
 
     def construct_related_file_name(self, current_file):
-        if self.MODEL_SEGMENT in current_file:
-            related_file = re.sub(self.MODEL_SEGMENT, self.model_test_dir, current_file)
+        if self.MODEL_DIR in current_file:
+            related_file = re.sub(self.MODEL_DIR, self.model_test_dir, current_file)
             related_file = re.sub(r'(\.\w+)$', '_%s\g<1>' % self.test_type, related_file)
             return related_file
-        elif self.CONTROLLER_SEGMENT in current_file:
-            related_file = re.sub(self.CONTROLLER_SEGMENT, self.controller_test_dir, current_file)
+        elif self.CONTROLLER_DIR in current_file:
+            related_file = re.sub(self.CONTROLLER_DIR, self.controller_test_dir, current_file)
             related_file = re.sub(r'(\.\w+)$', '_%s\g<1>' % self.test_type, related_file)
             return related_file
         else:

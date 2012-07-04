@@ -149,6 +149,10 @@ class ListRailsModelsCommand(RailsCommandBase):
             related_file = re.sub(self.CONTROLLER_DIR, self.MODEL_DIR, current_file)
             related_file = re.sub(r'\w+_controller(\.\w+$)', '%s\g<1>' % singular, related_file)
             return related_file
+        elif self.model_test_dir in current_file:
+            related_file = re.sub(self.model_test_dir, self.MODEL_DIR, current_file)
+            related_file = re.sub(r'(\_%s)(.\w+)$' % self.test_type, '\g<2>', related_file)
+            return related_file
         else:
             return None
 
@@ -169,6 +173,10 @@ class ListRailsControllersCommand(RailsCommandBase):
 
             related_file = re.sub(self.MODEL_DIR, self.CONTROLLER_DIR, current_file)
             related_file = re.sub(r'\w+(\.\w+)$', '%s_controller\g<1>' % plural, related_file)
+            return related_file
+        elif self.controller_test_dir in current_file:
+            related_file = re.sub(self.controller_test_dir, self.CONTROLLER_DIR, current_file)
+            related_file = re.sub(r'(\_%s)(.\w+)$' % self.test_type, '\g<2>', related_file)
             return related_file
         else:
             return None

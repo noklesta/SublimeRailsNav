@@ -113,11 +113,22 @@ class RailsCommandBase(sublime_plugin.WindowCommand, RailsMixin):
     CONTROLLER_DIR = os.path.join('app', 'controllers')
     VIEW_DIR = os.path.join('app', 'views')
 
-    def find_root(self):
+    def setup(self):
         self.root = self.rails_root()
         if not self.root:
             sublime.error_message('No Rails root directory found. Not a Rails application?')
             return False
+
+        if os.path.isdir(os.path.join(self.root, 'spec')):
+            # RSpec seems to be installed, so ignore the 'test' dir and search for specs
+            self.test_type = 'spec'
+            self.model_test_dir = os.path.join('spec', 'models')
+            self.controller_test_dir = os.path.join('spec', 'controllers')
+        else:
+            # No RSpec, so use the standard 'test' dir
+            self.test_type = 'test'
+            self.model_test_dir = os.path.join('test', 'unit')
+            self.controller_test_dir = os.path.join('test', 'functional')
         return True
 
     def construct_related_file_name(self, current_file):
@@ -126,7 +137,7 @@ class RailsCommandBase(sublime_plugin.WindowCommand, RailsMixin):
 
 class ListRailsModelsCommand(RailsCommandBase):
     def run(self):
-        if not self.find_root():
+        if not self.setup():
             return
         self.show_files([['app', 'models']])
 
@@ -147,7 +158,7 @@ class ListRailsModelsCommand(RailsCommandBase):
 
 class ListRailsControllersCommand(RailsCommandBase):
     def run(self):
-        if not self.find_root():
+        if not self.setup():
             return
         self.show_files([['app', 'controllers']])
 
@@ -168,7 +179,7 @@ class ListRailsControllersCommand(RailsCommandBase):
 
 class ListRailsViewsCommand(RailsCommandBase):
     def run(self):
-        if not self.find_root():
+        if not self.setup():
             return
         self.show_files([['app', 'views']], '\.(?:erb|haml)$')
 
@@ -178,18 +189,8 @@ class ListRailsViewsCommand(RailsCommandBase):
 
 class ListRailsTestsCommand(RailsCommandBase):
     def run(self):
-        if not self.find_root():
+        if not self.setup():
             return
-        if os.path.isdir(os.path.join(self.root, 'spec')):
-            # RSpec seems to be installed, so ignore the 'test' dir and search for specs
-            self.test_type = 'spec'
-            self.model_test_dir = os.path.join('spec', 'models')
-            self.controller_test_dir = os.path.join('spec', 'controllers')
-        else:
-            # No RSpec, so use the standard 'test' dir
-            self.test_type = 'test'
-            self.model_test_dir = os.path.join('test', 'unit')
-            self.controller_test_dir = os.path.join('test', 'functional')
 
         self.show_files([[self.test_type]])
 
@@ -211,7 +212,7 @@ class ListRailsTestsCommand(RailsCommandBase):
 
 class ListRailsJavascriptsCommand(RailsCommandBase):
     def run(self):
-        if not self.find_root():
+        if not self.setup():
             return
         dirs = self.get_setting('javascript_locations')
         self.show_files(dirs, '\.(?:js|coffee|erb)$')
@@ -222,7 +223,7 @@ class ListRailsJavascriptsCommand(RailsCommandBase):
 
 class ListRailsStylesheetsCommand(RailsCommandBase):
     def run(self):
-        if not self.find_root():
+        if not self.setup():
             return
         dirs = self.get_setting('stylesheet_locations')
         self.show_files(dirs, '\.(?:s?css)$')

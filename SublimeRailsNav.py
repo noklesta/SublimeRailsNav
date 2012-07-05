@@ -189,7 +189,7 @@ class ListRailsViewsCommand(RailsCommandBase):
     def run(self):
         if not self.setup():
             return
-        self.show_files([['app', 'views']], '\.(?:erb|haml)$')
+        self.show_files([['app', 'views']], '\.(?:erb|haml|slim)$')
 
     def is_listing_current_file_group(self, current_file):
         return 'app/views' in current_file

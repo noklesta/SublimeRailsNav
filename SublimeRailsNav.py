@@ -278,6 +278,10 @@ class ListRailsTestsCommand(RailsCommandBase):
                 pattern = re.sub(self.VIEW_DIR, self.controller_test_dir, current_file)
                 pattern = re.sub(r'(\w+)%s[\w\.]+$' % os.sep, '\g<1>_controller_test.rb', pattern)
             return pattern
+        elif self.HELPER_DIR in current_file:
+            pattern = re.sub(self.HELPER_DIR, self.helper_test_dir, current_file)
+            pattern = re.sub(r'\.rb$', r'_%s\.rb' % self.test_type, pattern)
+            return pattern
         else:
             return None
 

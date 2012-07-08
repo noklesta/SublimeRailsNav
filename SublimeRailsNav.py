@@ -124,6 +124,7 @@ class RailsCommandBase(sublime_plugin.WindowCommand, RailsMixin):
             self.test_type = 'spec'
             self.model_test_dir = os.path.join('spec', 'models')
             self.controller_test_dir = os.path.join('spec', 'controllers')
+            self.view_test_dir = os.path.join('spec', 'views')
         else:
             # No RSpec, so use the standard 'test' dir
             self.test_type = 'test'
@@ -222,6 +223,16 @@ class ListRailsTestsCommand(RailsCommandBase):
         elif self.CONTROLLER_DIR in current_file:
             pattern = re.sub(self.CONTROLLER_DIR, self.controller_test_dir, current_file)
             pattern = re.sub(r'(\.\w+)$', '_%s\g<1>' % self.test_type, pattern)
+            return pattern
+        elif self.VIEW_DIR in current_file:
+            if self.test_type == 'spec':
+                # RSpec uses separate view specs
+                pattern = re.sub(self.VIEW_DIR, self.view_test_dir, current_file)
+                pattern = re.sub(r'(\w+)\.[\w\.]+$', r'\g<1>[\w\.]*_spec\.rb', pattern)
+            else:
+                # Test::Unit puts view tests in the controller test file
+                pattern = re.sub(self.VIEW_DIR, self.controller_test_dir, current_file)
+                pattern = re.sub(r'(\w+)%s[\w\.]+$' % os.sep, '\g<1>_controller_test.rb', pattern)
             return pattern
         else:
             return None

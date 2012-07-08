@@ -161,7 +161,7 @@ class ListRailsModelsCommand(RailsCommandBase):
             return None
 
     def is_listing_current_file_group(self, current_file):
-        return 'app/models' in current_file
+        return os.path.join('app', 'models') in current_file
 
 
 class ListRailsControllersCommand(RailsCommandBase):
@@ -194,7 +194,7 @@ class ListRailsControllersCommand(RailsCommandBase):
             return None
 
     def is_listing_current_file_group(self, current_file):
-        return 'app/controllers' in current_file
+        return os.path.join('app', 'controllers') in current_file
 
 
 class ListRailsViewsCommand(RailsCommandBase):
@@ -227,7 +227,7 @@ class ListRailsViewsCommand(RailsCommandBase):
             return None
 
     def is_listing_current_file_group(self, current_file):
-        return 'app/views' in current_file
+        return os.path.join('app', 'views') in current_file
 
 
 class ListRailsHelpersCommand(RailsCommandBase):
@@ -249,7 +249,7 @@ class ListRailsHelpersCommand(RailsCommandBase):
             return None
 
     def is_listing_current_file_group(self, current_file):
-        return 'app/helpers' in current_file
+        return os.path.join('app', 'helpers') in current_file
 
 
 class ListRailsTestsCommand(RailsCommandBase):

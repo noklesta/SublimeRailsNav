@@ -33,7 +33,7 @@ class RailsMixin:
             if self.is_listing_current_file_group(current_file):
                 self.remove_from_list(current_file)
             else:
-                self.move_related_file_to_top(current_file)
+                self.move_related_files_to_top(current_file)
 
         start_index = len(self.root) + 1
         # Need to add a couple of spaces to avoid getting the file names cut off
@@ -98,12 +98,12 @@ class RailsMixin:
             self.files.remove(current_file)
             pass
 
-    def move_related_file_to_top(self, current_file):
-        related_file = self.construct_related_file_name(current_file)
+    def move_related_files_to_top(self, current_file):
+        related_file_name_pattern = self.construct_related_file_name_pattern(current_file)
 
-        if related_file:
+        if related_file_name_pattern:
             for file in self.files:
-                if file == related_file:
+                if re.search(related_file_name_pattern, file):
                     i = self.files.index(file)
                     self.files.insert(0, self.files.pop(i))
 
@@ -131,7 +131,7 @@ class RailsCommandBase(sublime_plugin.WindowCommand, RailsMixin):
             self.controller_test_dir = os.path.join('test', 'functional')
         return True
 
-    def construct_related_file_name(self, current_file):
+    def construct_related_file_name_pattern(self, current_file):
         pass
 
 
@@ -141,18 +141,18 @@ class ListRailsModelsCommand(RailsCommandBase):
             return
         self.show_files([['app', 'models']])
 
-    def construct_related_file_name(self, current_file):
+    def construct_related_file_name_pattern(self, current_file):
         if self.CONTROLLER_DIR in current_file:
             m = re.search(r'(\w+)_controller\.\w+$', current_file)
             singular = Inflector().singularize(m.group(1))
 
-            related_file = re.sub(self.CONTROLLER_DIR, self.MODEL_DIR, current_file)
-            related_file = re.sub(r'\w+_controller(\.\w+$)', '%s\g<1>' % singular, related_file)
-            return related_file
+            pattern = re.sub(self.CONTROLLER_DIR, self.MODEL_DIR, current_file)
+            pattern = re.sub(r'\w+_controller(\.\w+$)', '%s\g<1>' % singular, pattern)
+            return pattern
         elif self.model_test_dir in current_file:
-            related_file = re.sub(self.model_test_dir, self.MODEL_DIR, current_file)
-            related_file = re.sub(r'(\_%s)(.\w+)$' % self.test_type, '\g<2>', related_file)
-            return related_file
+            pattern = re.sub(self.model_test_dir, self.MODEL_DIR, current_file)
+            pattern = re.sub(r'(\_%s)(.\w+)$' % self.test_type, '\g<2>', pattern)
+            return pattern
         else:
             return None
 
@@ -166,18 +166,18 @@ class ListRailsControllersCommand(RailsCommandBase):
             return
         self.show_files([['app', 'controllers']])
 
-    def construct_related_file_name(self, current_file):
+    def construct_related_file_name_pattern(self, current_file):
         if self.MODEL_DIR in current_file:
             m = re.search(r'(\w+)\.\w+$', current_file)
             plural = Inflector().pluralize(m.group(1))
 
-            related_file = re.sub(self.MODEL_DIR, self.CONTROLLER_DIR, current_file)
-            related_file = re.sub(r'\w+(\.\w+)$', '%s_controller\g<1>' % plural, related_file)
-            return related_file
+            pattern = re.sub(self.MODEL_DIR, self.CONTROLLER_DIR, current_file)
+            pattern = re.sub(r'\w+(\.\w+)$', '%s_controller\g<1>' % plural, pattern)
+            return pattern
         elif self.controller_test_dir in current_file:
-            related_file = re.sub(self.controller_test_dir, self.CONTROLLER_DIR, current_file)
-            related_file = re.sub(r'(\_%s)(.\w+)$' % self.test_type, '\g<2>', related_file)
-            return related_file
+            pattern = re.sub(self.controller_test_dir, self.CONTROLLER_DIR, current_file)
+            pattern = re.sub(r'(\_%s)(.\w+)$' % self.test_type, '\g<2>', pattern)
+            return pattern
         else:
             return None
 
@@ -202,15 +202,15 @@ class ListRailsTestsCommand(RailsCommandBase):
 
         self.show_files([[self.test_type]])
 
-    def construct_related_file_name(self, current_file):
+    def construct_related_file_name_pattern(self, current_file):
         if self.MODEL_DIR in current_file:
-            related_file = re.sub(self.MODEL_DIR, self.model_test_dir, current_file)
-            related_file = re.sub(r'(\.\w+)$', '_%s\g<1>' % self.test_type, related_file)
-            return related_file
+            pattern = re.sub(self.MODEL_DIR, self.model_test_dir, current_file)
+            pattern = re.sub(r'(\.\w+)$', '_%s\g<1>' % self.test_type, pattern)
+            return pattern
         elif self.CONTROLLER_DIR in current_file:
-            related_file = re.sub(self.CONTROLLER_DIR, self.controller_test_dir, current_file)
-            related_file = re.sub(r'(\.\w+)$', '_%s\g<1>' % self.test_type, related_file)
-            return related_file
+            pattern = re.sub(self.CONTROLLER_DIR, self.controller_test_dir, current_file)
+            pattern = re.sub(r'(\.\w+)$', '_%s\g<1>' % self.test_type, pattern)
+            return pattern
         else:
             return None
 

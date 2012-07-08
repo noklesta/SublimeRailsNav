@@ -113,6 +113,7 @@ class RailsCommandBase(sublime_plugin.WindowCommand, RailsMixin):
     CONTROLLER_DIR = os.path.join('app', 'controllers')
     VIEW_DIR = os.path.join('app', 'views')
     HELPER_DIR = os.path.join('app', 'helpers')
+    FIXTURE_DIR = os.path.join('test', 'fixtures')
 
     def setup(self):
         self.root = self.rails_root()
@@ -155,7 +156,7 @@ class ListRailsModelsCommand(RailsCommandBase):
             return pattern
         elif self.model_test_dir in current_file:
             pattern = re.sub(self.model_test_dir, self.MODEL_DIR, current_file)
-            pattern = re.sub(r'(\_%s)(.\w+)$' % self.test_type, '\g<2>', pattern)
+            pattern = re.sub(r'(_%s)(.\w+)$' % self.test_type, '\g<2>', pattern)
             return pattern
         else:
             return None
@@ -188,7 +189,7 @@ class ListRailsControllersCommand(RailsCommandBase):
             return pattern
         elif self.controller_test_dir in current_file:
             pattern = re.sub(self.controller_test_dir, self.CONTROLLER_DIR, current_file)
-            pattern = re.sub(r'(\_%s)(.\w+)$' % self.test_type, '\g<2>', pattern)
+            pattern = re.sub(r'(_%s)(.\w+)$' % self.test_type, '\g<2>', pattern)
             return pattern
         else:
             return None
@@ -243,7 +244,7 @@ class ListRailsHelpersCommand(RailsCommandBase):
             return pattern
         elif self.helper_test_dir in current_file:
             pattern = re.sub(self.helper_test_dir, self.HELPER_DIR, current_file)
-            pattern = re.sub(r'(\_%s)(.\w+)$' % self.test_type, '\g<2>', pattern)
+            pattern = re.sub(r'(_%s)(.\w+)$' % self.test_type, '\g<2>', pattern)
             return pattern
         else:
             return None
@@ -257,6 +258,31 @@ class ListRailsFixturesCommand(RailsCommandBase):
         if not self.setup():
             return
         self.show_files([['test', 'fixtures']], '\.yml$')
+
+    def construct_related_file_name_pattern(self, current_file):
+        if self.MODEL_DIR in current_file:
+            m = re.search(r'(\w+)\.rb$', current_file)
+            plural = Inflector().pluralize(m.group(1))
+
+            pattern = re.sub(self.MODEL_DIR, self.FIXTURE_DIR, current_file)
+            pattern = re.sub(r'\w+\.rb$', r'%s\.yml' % plural, pattern)
+            return pattern
+        elif self.model_test_dir in current_file:
+            m = re.search(r'(\w+)_%s\.rb$' % self.test_type, current_file)
+            plural = Inflector().pluralize(m.group(1))
+
+            pattern = re.sub(self.model_test_dir, self.FIXTURE_DIR, current_file)
+            pattern = re.sub(r'(\w+)_%s\.rb$' % self.test_type, r'%s\.yml' % plural, pattern)
+            return pattern
+        elif self.controller_test_dir in current_file:
+            m = re.search(r'(\w+)_controller_%s\.rb$' % self.test_type, current_file)
+            plural = Inflector().pluralize(m.group(1))
+
+            pattern = re.sub(self.controller_test_dir, self.FIXTURE_DIR, current_file)
+            pattern = re.sub(r'(\w+)_controller_%s\.rb$' % self.test_type, r'%s\.yml' % plural, pattern)
+            return pattern
+        else:
+            return None
 
     def is_listing_current_file_group(self, current_file):
         return os.path.join('test', 'fixtures') in current_file

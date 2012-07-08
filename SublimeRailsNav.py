@@ -174,6 +174,10 @@ class ListRailsControllersCommand(RailsCommandBase):
             pattern = re.sub(self.MODEL_DIR, self.CONTROLLER_DIR, current_file)
             pattern = re.sub(r'\w+(\.\w+)$', '%s_controller\g<1>' % plural, pattern)
             return pattern
+        elif self.VIEW_DIR in current_file:
+            pattern = re.sub(self.VIEW_DIR, self.CONTROLLER_DIR, current_file)
+            pattern = re.sub(os.path.join('', r'(\w+)', r'[\w\.]+$'), '\g<1>_controller', pattern)
+            return pattern
         elif self.controller_test_dir in current_file:
             pattern = re.sub(self.controller_test_dir, self.CONTROLLER_DIR, current_file)
             pattern = re.sub(r'(\_%s)(.\w+)$' % self.test_type, '\g<2>', pattern)

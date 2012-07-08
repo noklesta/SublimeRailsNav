@@ -252,6 +252,16 @@ class ListRailsHelpersCommand(RailsCommandBase):
         return os.path.join('app', 'helpers') in current_file
 
 
+class ListRailsFixturesCommand(RailsCommandBase):
+    def run(self):
+        if not self.setup():
+            return
+        self.show_files([['test', 'fixtures']], '\.yml$')
+
+    def is_listing_current_file_group(self, current_file):
+        return os.path.join('test', 'fixtures') in current_file
+
+
 class ListRailsTestsCommand(RailsCommandBase):
     def run(self):
         if not self.setup():

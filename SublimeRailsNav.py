@@ -325,11 +325,18 @@ class ListRailsTestsCommand(RailsCommandBase):
             pattern = re.sub(self.HELPER_DIR, self.helper_test_dir, current_file)
             pattern = re.sub(r'\.rb$', r'_%s\.rb' % self.test_type, pattern)
             return pattern
+        elif self.FIXTURE_DIR in current_file:
+            m = re.search(r'(\w+)\.yml$', current_file)
+            singular = Inflector().singularize(m.group(1))
+
+            pattern = re.sub(self.FIXTURE_DIR, r'(?:%s|%s)' % (self.model_test_dir, self.controller_test_dir), current_file)
+            pattern = re.sub(r'(\w+)\.yml$', r'(?:\g<1>_controller|%s)_%s\.rb' % (singular, self.test_type), pattern)
+            return pattern
         else:
             return None
 
     def is_listing_current_file_group(self, current_file):
-        return os.path.join(self.root, self.test_type) in current_file
+        return os.path.join(self.root, self.test_type) in current_file and not self.FIXTURE_DIR in current_file
 
 
 class ListRailsJavascriptsCommand(RailsCommandBase):

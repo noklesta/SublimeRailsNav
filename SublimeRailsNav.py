@@ -201,6 +201,21 @@ class ListRailsViewsCommand(RailsCommandBase):
             pattern = re.sub(self.CONTROLLER_DIR, self.VIEW_DIR, current_file)
             pattern = re.sub(r'(\w+)_controller\.\w+$', '\g<1>' + os.sep, pattern)
             return pattern
+        elif self.test_type == 'test' and self.controller_test_dir in current_file:
+            # With Test::Unit, view tests are found in the controller test
+            # file, so the best we can do is to show all views for the
+            # controller associated with the currently active controller test
+            # at the top of the list.
+            pattern = re.sub(self.controller_test_dir, self.VIEW_DIR, current_file)
+            pattern = re.sub(r'(\w+)_controller_test\.rb$', '\g<1>' + os.sep, pattern)
+            return pattern
+        elif self.test_type == 'spec' and self.view_test_dir in current_file:
+            # RSpec uses separate view specs, so here we can show the
+            # particular view associated with the currently active spec at the
+            # top of the list.
+            pattern = re.sub(self.view_test_dir, self.VIEW_DIR, current_file)
+            pattern = re.sub(r'(\w+)\.[\w\.]+$', '\g<1>\.', pattern)
+            return pattern
         else:
             return None
 

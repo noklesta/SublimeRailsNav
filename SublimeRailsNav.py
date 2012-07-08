@@ -112,6 +112,7 @@ class RailsCommandBase(sublime_plugin.WindowCommand, RailsMixin):
     MODEL_DIR = os.path.join('app', 'models')
     CONTROLLER_DIR = os.path.join('app', 'controllers')
     VIEW_DIR = os.path.join('app', 'views')
+    HELPER_DIR = os.path.join('app', 'helpers')
 
     def setup(self):
         self.root = self.rails_root()
@@ -125,11 +126,13 @@ class RailsCommandBase(sublime_plugin.WindowCommand, RailsMixin):
             self.model_test_dir = os.path.join('spec', 'models')
             self.controller_test_dir = os.path.join('spec', 'controllers')
             self.view_test_dir = os.path.join('spec', 'views')
+            self.helper_test_dir = os.path.join('spec', 'helpers')
         else:
             # No RSpec, so use the standard 'test' dir
             self.test_type = 'test'
             self.model_test_dir = os.path.join('test', 'unit')
             self.controller_test_dir = os.path.join('test', 'functional')
+            self.helper_test_dir = os.path.join('test', 'unit', 'helpers')
         return True
 
     def construct_related_file_name_pattern(self, current_file):
@@ -228,6 +231,18 @@ class ListRailsHelpersCommand(RailsCommandBase):
         if not self.setup():
             return
         self.show_files([['app', 'helpers']])
+
+    def construct_related_file_name_pattern(self, current_file):
+        if self.CONTROLLER_DIR in current_file:
+            pattern = re.sub(self.CONTROLLER_DIR, self.HELPER_DIR, current_file)
+            pattern = re.sub(r'_controller\.rb$', '_helper\.rb', pattern)
+            return pattern
+        elif self.helper_test_dir in current_file:
+            pattern = re.sub(self.helper_test_dir, self.HELPER_DIR, current_file)
+            pattern = re.sub(r'(\_%s)(.\w+)$' % self.test_type, '\g<2>', pattern)
+            return pattern
+        else:
+            return None
 
     def is_listing_current_file_group(self, current_file):
         return 'app/helpers' in current_file

@@ -191,6 +191,14 @@ class ListRailsViewsCommand(RailsCommandBase):
             return
         self.show_files([['app', 'views']], '\.(?:erb|haml|slim)$')
 
+    def construct_related_file_name_pattern(self, current_file):
+        if self.CONTROLLER_DIR in current_file:
+            pattern = re.sub(self.CONTROLLER_DIR, self.VIEW_DIR, current_file)
+            pattern = re.sub(r'(\w+)_controller\.\w+$', '\g<1>' + os.sep, pattern)
+            return pattern
+        else:
+            return None
+
     def is_listing_current_file_group(self, current_file):
         return 'app/views' in current_file
 

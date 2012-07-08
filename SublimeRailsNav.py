@@ -223,6 +223,16 @@ class ListRailsViewsCommand(RailsCommandBase):
         return 'app/views' in current_file
 
 
+class ListRailsHelpersCommand(RailsCommandBase):
+    def run(self):
+        if not self.setup():
+            return
+        self.show_files([['app', 'helpers']])
+
+    def is_listing_current_file_group(self, current_file):
+        return 'app/helpers' in current_file
+
+
 class ListRailsTestsCommand(RailsCommandBase):
     def run(self):
         if not self.setup():

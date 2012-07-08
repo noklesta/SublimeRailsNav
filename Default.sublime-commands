@@ -12,6 +12,10 @@
         "command": "list_rails_views"
     },
     {
+        "caption": "Simple Rails Navigator: List helpers",
+        "command": "list_rails_helpers"
+    },
+    {
         "caption": "Simple Rails Navigator: List tests/specs",
         "command": "list_rails_tests"
     },

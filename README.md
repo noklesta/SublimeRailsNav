@@ -2,7 +2,7 @@
 
 Simple plugin for navigating Ruby on Rails applications.
 
-This plugin provides commands for listing models, controllers, views,
+This plugin provides commands for listing models, controllers, views, helpers,
 tests/specs, javascript files, or stylesheets in a quick panel for easy
 selection.
 
@@ -52,6 +52,7 @@ in the console, try out the key combinations and see if anything is logged.
     { "keys": ["super+ctrl+m"], "command": "list_rails_models" },
     { "keys": ["super+ctrl+c"], "command": "list_rails_controllers" },
     { "keys": ["super+ctrl+v"], "command": "list_rails_views" },
+    { "keys": ["super+ctrl+h"], "command": "list_rails_helpers" },
     { "keys": ["super+ctrl+t"], "command": "list_rails_tests" },
     { "keys": ["super+ctrl+i"], "command": "list_rails_javascripts" },
     { "keys": ["super+ctrl+y"], "command": "list_rails_stylesheets" }
@@ -62,6 +63,7 @@ you can restrict the key bindings to command mode like this:
     { "keys": [" ", "m"], "command": "list_rails_models", "context": [{"key": "setting.command_mode"}] },
     { "keys": [" ", "c"], "command": "list_rails_controllers", "context": [{"key": "setting.command_mode"}] },
     { "keys": [" ", "v"], "command": "list_rails_views", "context": [{"key": "setting.command_mode"}] },
+    { "keys": [" ", "h"], "command": "list_rails_helpers", "context": [{"key": "setting.command_mode"}] },
     { "keys": [" ", "t"], "command": "list_rails_tests", "context": [{"key": "setting.command_mode"}] },
     { "keys": [" ", "i"], "command": "list_rails_javascripts", "context": [{"key": "setting.command_mode"}] },
     { "keys": [" ", "y"], "command": "list_rails_stylesheets", "context": [{"key": "setting.command_mode"}] }

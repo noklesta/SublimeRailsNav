@@ -332,6 +332,9 @@ class ListRailsTestsCommand(RailsCommandBase):
             pattern = re.sub(self.FIXTURE_DIR, r'(?:%s|%s)' % (self.model_test_dir, self.controller_test_dir), current_file)
             pattern = re.sub(r'(\w+)\.yml$', r'(?:\g<1>_controller|%s)_%s\.rb' % (singular, self.test_type), pattern)
             return pattern
+        elif 'config/routes.rb' in current_file and self.test_type == 'spec':
+            pattern = os.path.join(self.root, 'spec', 'routing', '.+_routing_spec.rb')
+            return pattern
         else:
             return None
 

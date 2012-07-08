@@ -154,6 +154,13 @@ class ListRailsModelsCommand(RailsCommandBase):
             pattern = re.sub(self.CONTROLLER_DIR, self.MODEL_DIR, current_file)
             pattern = re.sub(r'\w+_controller(\.\w+$)', '%s\g<1>' % singular, pattern)
             return pattern
+        elif self.FIXTURE_DIR in current_file:
+            m = re.search(r'(\w+)\.yml$', current_file)
+            singular = Inflector().singularize(m.group(1))
+
+            pattern = re.sub(self.FIXTURE_DIR, self.MODEL_DIR, current_file)
+            pattern = re.sub(r'\w+.yml$', '%s.rb' % singular, pattern)
+            return pattern
         elif self.model_test_dir in current_file:
             pattern = re.sub(self.model_test_dir, self.MODEL_DIR, current_file)
             pattern = re.sub(r'(_%s)(.\w+)$' % self.test_type, '\g<2>', pattern)

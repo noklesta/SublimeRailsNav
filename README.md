@@ -11,15 +11,69 @@ simply by pressing Enter. For instance, if the active view is a Rails model
 and you request a list of controllers, the controller corresponding to the
 model will be listed at the top, provided that you follow normal Rails
 resource conventions with the controller name containing the pluralized
-version of the model name (e.g. post.rb and posts_controller.rb).
+version of the model name (e.g. `post.rb` and `posts_controller.rb`).
 
 The same goes for tests or specs (in the example case, the test file should be
-called test/unit/post_test.rb or spec/models/post_spec.rb). If the application
-contains a `spec` directory, the plugin will search for specs and ignore the
-`test` directory; otherwise the `test` directory will be used.
+called `test/unit/post_test.rb` or `spec/models/post_spec.rb`). If the
+application contains a `spec` directory, the plugin will search for specs and
+ignore the `test` directory; otherwise the `test` directory will be used.
 
-The plugin was inspired by Luqman Amjad's Rails Related Files plugin. These
-plugins have complementary functionality and can be used together.
+The following table shows which related files will be put at the top of the list:
+
+<table>
+  <thead>
+    <tr>
+      <td>Active file</td>
+      <td>Listing these file types will show related files at the top of the list</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>model</td>
+      <td>controller; fixture; model unit test/model spec</td>
+    </tr>
+    <tr>
+      <td>controller</td>
+      <td>model; views; helper; functional test/controller spec</td>
+    </tr>
+    <tr>
+      <td>view</td>
+      <td>controller; functional test/view spec</td>
+    </tr>
+    <tr>
+      <td>helper</td>
+      <td>controller; helper unit test/helper spec</td>
+    </tr>
+    <tr>
+      <td>fixture</td>
+      <td>model; model unit test/model spec; functional test/controller spec</td>
+    </tr>
+    <tr>
+      <td>model unit test/model spec</td>
+      <td>model; fixture</td>
+    </tr>
+    <tr>
+      <td>functional test</td>
+      <td>controller; views; fixture</td>
+    </tr>
+    <tr>
+      <td>controller spec</td>
+      <td>controller; fixture</td>
+    </tr>
+    <tr>
+      <td>view spec</td>
+      <td>view</td>
+    </tr>
+    <tr>
+      <td>helper unit test/helper spec</td>
+      <td>helper</td>
+    </tr>
+  </tbody>
+</table>
+
+This plugin was inspired by Luqman Amjad's Rails Related Files plugin. The
+plugins have complementary functionality (Amjad's plugin shows related files
+of all types in a single list), and they can be used together.
 
 ## Installation
 

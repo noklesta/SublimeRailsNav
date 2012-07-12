@@ -68,6 +68,10 @@ The following table shows which related files will be put at the top of the list
       <td>helper unit test/helper spec</td>
       <td>helper</td>
     </tr>
+    <tr>
+      <td>routes.rb</td>
+      <td>route specs</td>
+    </tr>
   </tbody>
 </table>
 

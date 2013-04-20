@@ -6,7 +6,7 @@
 # See the end of this file for the free software, open source license (BSD-style).
 
 import re
-from base import Base
+from .base import Base
 
 class English (Base):
     """

@@ -2,8 +2,8 @@ import os
 import re
 import sublime
 import sublime_plugin
-from recursive_glob import rglob
-from lib.inflector import *
+from .recursive_glob import rglob
+from .lib.inflector import *
 
 
 class RailsMixin:
@@ -37,7 +37,7 @@ class RailsMixin:
 
         start_index = len(self.root) + 1
         # Need to add a couple of spaces to avoid getting the file names cut off
-        relative_paths = map(lambda x: x[start_index:] + '  ', self.files)
+        relative_paths = list(map(lambda x: x[start_index:] + '  ', self.files))
 
         self.window.show_quick_panel(relative_paths, self.file_selected)
 

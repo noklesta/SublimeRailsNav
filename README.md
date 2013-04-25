@@ -2,6 +2,17 @@
 
 Simple plugin for navigating Ruby on Rails applications.
 
+--------------
+
+**NOTE**: The master branch is not compatible with Sublime Text 3, but there
+is now a separate [ST3](https://github.com/noklesta/SublimeRailsNav/tree/ST3)
+branch (thanks @doz!) that works with ST3 (and is incompatible with ST2).
+Until Package Control for ST3 is ready, the ST3 version can be installed by
+cloning the GitHub repo (see *Clone from GitHub* below) and running `git
+checkout ST3`.
+
+--------------
+
 This plugin provides commands for listing models, controllers, views, helpers,
 fixtures, tests/specs, javascript files, or stylesheets in a quick panel for
 easy selection.

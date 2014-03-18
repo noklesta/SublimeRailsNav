@@ -39,7 +39,7 @@ class RailsMixin:
         # Need to add a couple of spaces to avoid getting the file names cut off
         relative_paths = list(map(lambda x: x[start_index:] + '  ', self.files))
 
-        self.window.show_quick_panel(relative_paths, self.file_selected)
+        self.window.show_quick_panel(relative_paths, self.file_selected, sublime.MONOSPACE_FONT, -1, self.select_item_changed)
 
     def rails_root(self):
         # Look for a Gemfile first, since that should always be found in the
@@ -85,6 +85,12 @@ class RailsMixin:
             if self.window.num_groups() > 1:
                 self.window.focus_group((self.window.active_group() + 1) % self.window.num_groups())
             self.window.open_file(self.files[selected_index])
+
+    def select_item_changed(self, selected_index):
+        if selected_index != -1:
+            if self.window.num_groups() > 1:
+                self.window.focus_group((self.window.active_group() + 1) % self.window.num_groups())
+            self.window.open_file(self.files[selected_index], sublime.TRANSIENT)
 
     def find_files(self, paths, file_pattern):
         self.files = []

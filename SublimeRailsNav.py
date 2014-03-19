@@ -87,6 +87,7 @@ class RailsMixin:
             self.window.open_file(self.files[selected_index])
 
     def select_item_changed(self, selected_index):
+        if self.window.num_groups() > 1: return
         if selected_index != -1:
             if self.window.num_groups() > 1:
                 self.window.focus_group((self.window.active_group() + 1) % self.window.num_groups())

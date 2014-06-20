@@ -30,10 +30,11 @@ class RailsMixin:
         view = self.window.active_view()
         if view:
             current_file = view.file_name()
-            if self.is_listing_current_file_group(current_file):
-                self.remove_from_list(current_file)
-            else:
-                self.move_related_files_to_top(current_file)
+            if current_file:
+                if self.is_listing_current_file_group(current_file):
+                    self.remove_from_list(current_file)
+                else:
+                    self.move_related_files_to_top(current_file)
 
         start_index = len(self.root) + 1
         # Need to add a couple of spaces to avoid getting the file names cut off

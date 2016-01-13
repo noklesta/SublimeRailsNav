@@ -131,6 +131,11 @@ class RailsCommandBase(sublime_plugin.WindowCommand, RailsMixin):
             sublime.error_message('No Rails root directory found. Not a Rails application?')
             return False
 
+        self.rspec_with_factories = self.get_setting('use_rspec_with_factories') 
+        # This checks Sublime setting if use_rspec_with_factories is true
+        if self.rspec_with_factories:
+            self.__class__.FIXTURE_DIR = os.path.join('spec', 'factories')
+
         if os.path.isdir(os.path.join(self.root, 'spec')):
             # RSpec seems to be installed, so ignore the 'test' dir and search for specs
             self.test_type = 'spec'
@@ -165,12 +170,21 @@ class ListRailsModelsCommand(RailsCommandBase):
             pattern = re.sub(r'\w+_controller(\.\w+$)', '%s\g<1>' % singular, pattern)
             return pattern
         elif self.FIXTURE_DIR in current_file:
-            m = re.search(r'(\w+)\.yml$', current_file)
+            if self.rspec_with_factories:
+                m = re.search(r'(\w+)\.rb$', current_file)
+            else:
+                m = re.search(r'(\w+)\.yml$', current_file)
+            
             singular = Inflector().singularize(m.group(1))
 
             pattern = re.sub(self.FIXTURE_DIR, self.MODEL_DIR, current_file)
-            pattern = re.sub(r'\w+.yml$', '%s.rb' % singular, pattern)
+            if self.rspec_with_factories:
+                pattern = re.sub(r'\w+.rb$', '%s.rb' % singular, pattern)
+            else:
+                pattern = re.sub(r'\w+.yml$', '%s.rb' % singular, pattern)
+            
             return pattern
+
         elif self.model_test_dir in current_file:
             pattern = re.sub(self.model_test_dir, self.MODEL_DIR, current_file)
             pattern = re.sub(r'(_%s)(.\w+)$' % self.test_type, '\g<2>', pattern)
@@ -274,7 +288,13 @@ class ListRailsFixturesCommand(RailsCommandBase):
     def run(self):
         if not self.setup():
             return
-        self.show_files([['test', 'fixtures']], '\.yml$')
+
+        # If rspec_with_factories is set as true in settings, 
+        # List Fixtures will show related factory files.
+        if self.rspec_with_factories:
+            self.show_files([['spec', 'factories']], '\.rb$')
+        else:
+            self.show_files([['test', 'fixtures']], '\.yml$')
 
     def construct_related_file_name_pattern(self, current_file):
         if self.MODEL_DIR in current_file:
@@ -282,21 +302,32 @@ class ListRailsFixturesCommand(RailsCommandBase):
             plural = Inflector().pluralize(m.group(1))
 
             pattern = re.sub(self.MODEL_DIR, self.FIXTURE_DIR, current_file)
-            pattern = re.sub(r'\w+\.rb$', r'%s\.yml' % plural, pattern)
+
+            if self.rspec_with_factories:
+                pattern = re.sub(r'\w+\.rb$', r'%s\.rb' % plural, pattern)
+            else:
+                pattern = re.sub(r'\w+\.rb$', r'%s\.yml' % plural, pattern)
+
             return pattern
         elif self.model_test_dir in current_file:
             m = re.search(r'(\w+)_%s\.rb$' % self.test_type, current_file)
             plural = Inflector().pluralize(m.group(1))
 
             pattern = re.sub(self.model_test_dir, self.FIXTURE_DIR, current_file)
-            pattern = re.sub(r'(\w+)_%s\.rb$' % self.test_type, r'%s\.yml' % plural, pattern)
+            if self.rspec_with_factories:
+                pattern = re.sub(r'(\w+)_%s\.rb$' % self.test_type, r'%s\.rb' % plural, pattern)
+            else:
+                pattern = re.sub(r'(\w+)_%s\.rb$' % self.test_type, r'%s\.yml' % plural, pattern)
             return pattern
         elif self.controller_test_dir in current_file:
             m = re.search(r'(\w+)_controller_%s\.rb$' % self.test_type, current_file)
             plural = Inflector().pluralize(m.group(1))
 
             pattern = re.sub(self.controller_test_dir, self.FIXTURE_DIR, current_file)
-            pattern = re.sub(r'(\w+)_controller_%s\.rb$' % self.test_type, r'%s\.yml' % plural, pattern)
+            if self.rspec_with_factories:
+                pattern = re.sub(r'(\w+)_controller_%s\.rb$' % self.test_type, r'%s\.rb' % plural, pattern)
+            else:
+                pattern = re.sub(r'(\w+)_controller_%s\.rb$' % self.test_type, r'%s\.yml' % plural, pattern)
             return pattern
         else:
             return None
@@ -336,11 +367,18 @@ class ListRailsTestsCommand(RailsCommandBase):
             pattern = re.sub(r'\.rb$', r'_%s\.rb' % self.test_type, pattern)
             return pattern
         elif self.FIXTURE_DIR in current_file:
-            m = re.search(r'(\w+)\.yml$', current_file)
+            if self.rspec_with_factories:
+                m = re.search(r'(\w+)\.rb$', current_file)
+            else:
+                m = re.search(r'(\w+)\.yml$', current_file)
+            
             singular = Inflector().singularize(m.group(1))
 
             pattern = re.sub(self.FIXTURE_DIR, r'(?:%s|%s)' % (self.model_test_dir, self.controller_test_dir), current_file)
-            pattern = re.sub(r'(\w+)\.yml$', r'(?:\g<1>_controller|%s)_%s\.rb' % (singular, self.test_type), pattern)
+            if self.rspec_with_factories:
+                pattern = re.sub(r'(\w+)\.rb$', r'(?:\g<1>_controller|%s)_%s\.rb' % (singular, self.test_type), pattern)
+            else:
+                pattern = re.sub(r'(\w+)\.yml$', r'(?:\g<1>_controller|%s)_%s\.rb' % (singular, self.test_type), pattern)
             return pattern
         elif 'config/routes.rb' in current_file and self.test_type == 'spec':
             pattern = os.path.join(self.root, 'spec', 'routing', '.+_routing_spec.rb')

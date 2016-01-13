@@ -13,5 +13,7 @@
     ["app", "assets", "stylesheets"],
     ["lib", "assets", "stylesheets"],
     ["vendor", "assets", "stylesheets"]
-  ]
+  ],
+
+  "use_rspec_with_factories": false
 }

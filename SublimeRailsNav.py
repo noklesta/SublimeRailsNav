@@ -174,7 +174,7 @@ class ListRailsModelsCommand(RailsCommandBase):
                 m = re.search(r'(\w+)\.rb$', current_file)
             else:
                 m = re.search(r'(\w+)\.yml$', current_file)
-
+            
             singular = Inflector().singularize(m.group(1))
 
             pattern = re.sub(self.FIXTURE_DIR, self.MODEL_DIR, current_file)
@@ -182,8 +182,9 @@ class ListRailsModelsCommand(RailsCommandBase):
                 pattern = re.sub(r'\w+.rb$', '%s.rb' % singular, pattern)
             else:
                 pattern = re.sub(r'\w+.yml$', '%s.rb' % singular, pattern)
-
+            
             return pattern
+
         elif self.model_test_dir in current_file:
             pattern = re.sub(self.model_test_dir, self.MODEL_DIR, current_file)
             pattern = re.sub(r'(_%s)(.\w+)$' % self.test_type, '\g<2>', pattern)
@@ -298,42 +299,33 @@ class ListRailsFixturesCommand(RailsCommandBase):
     def construct_related_file_name_pattern(self, current_file):
         if self.MODEL_DIR in current_file:
             m = re.search(r'(\w+)\.rb$', current_file)
-            if self.rspec_with_factories:
-                singluar = Inflector().singularize(m.group(1))
-            else:
-                plural = Inflector().pluralize(m.group(1))
+            plural = Inflector().pluralize(m.group(1))
 
             pattern = re.sub(self.MODEL_DIR, self.FIXTURE_DIR, current_file)
 
             if self.rspec_with_factories:
-                pattern = re.sub(r'\w+\.rb$', r'%s\.rb' % singluar, pattern)
+                pattern = re.sub(r'\w+\.rb$', r'%s\.rb' % plural, pattern)
             else:
                 pattern = re.sub(r'\w+\.rb$', r'%s\.yml' % plural, pattern)
 
             return pattern
         elif self.model_test_dir in current_file:
             m = re.search(r'(\w+)_%s\.rb$' % self.test_type, current_file)
-            if self.rspec_with_factories:
-                singluar = Inflector().singularize(m.group(1))
-            else:
-                plural = Inflector().pluralize(m.group(1))
+            plural = Inflector().pluralize(m.group(1))
 
             pattern = re.sub(self.model_test_dir, self.FIXTURE_DIR, current_file)
             if self.rspec_with_factories:
-                pattern = re.sub(r'(\w+)_%s\.rb$' % self.test_type, r'%s\.rb' % singluar, pattern)
+                pattern = re.sub(r'(\w+)_%s\.rb$' % self.test_type, r'%s\.rb' % plural, pattern)
             else:
                 pattern = re.sub(r'(\w+)_%s\.rb$' % self.test_type, r'%s\.yml' % plural, pattern)
             return pattern
         elif self.controller_test_dir in current_file:
             m = re.search(r'(\w+)_controller_%s\.rb$' % self.test_type, current_file)
-            if self.rspec_with_factories:
-                singluar = Inflector().singularize(m.group(1))
-            else:
-                plural = Inflector().pluralize(m.group(1))
+            plural = Inflector().pluralize(m.group(1))
 
             pattern = re.sub(self.controller_test_dir, self.FIXTURE_DIR, current_file)
             if self.rspec_with_factories:
-                pattern = re.sub(r'(\w+)_controller_%s\.rb$' % self.test_type, r'%s\.rb' % singluar, pattern)
+                pattern = re.sub(r'(\w+)_controller_%s\.rb$' % self.test_type, r'%s\.rb' % plural, pattern)
             else:
                 pattern = re.sub(r'(\w+)_controller_%s\.rb$' % self.test_type, r'%s\.yml' % plural, pattern)
             return pattern

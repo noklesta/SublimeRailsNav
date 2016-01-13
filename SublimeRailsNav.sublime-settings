@@ -15,5 +15,6 @@
     ["vendor", "assets", "stylesheets"]
   ],
 
+  // If you use rspec with factories, set it to true in Setting - User
   "use_rspec_with_factories": false
 }
